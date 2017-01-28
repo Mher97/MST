@@ -1,0 +1,375 @@
+<html>
+
+	<head>
+		<meta http-equiv=Content-Type : content="text/html; charset=utf-8" />
+		<title>About MST</title>
+	</head>
+
+	<body>
+		<p style="margin-left: 40px;"><a name="Content" id="Content"></a></p>
+		<h1 style = "margin-left: 40px;"> About MST </h1>
+		<h1 style = "margin-left: 40px;"></h1>
+
+		<div style = "margin-left: 40px;">
+			<br>
+			<big><a href="#A_Minimal_Spannig_Tree ">A Minimal Spanning Tree</a></big><br>
+    			<big><a href="#Prims_Algorithm">Prim's algorithm</a></big><br>
+    			<big><a href="#Kruskals_Algorithm">Kruskal's algorithm</a></big><br>
+		   	
+			<a name="Overview" id="Overview"></a>
+		</div>
+
+	<h3 style="margin-left: 40px;">A Minimal Spannig Tree</h3>
+	<div style="margin-left: 40px;">
+     A minimal spanning tree is a spanning tree of a connected, weighted, undirected graph. It connects all the vertices together with the minimal total weighting for its edges.
+ A single graph can have many different spanning trees. We can also assign a weight to each edge, which is a number representing how unfavorable it is, and use this to assign a weight to a spanning tree by computing the sum of the weights of the edges in that spanning tree. A minimal spanning tree (MST) or minimum weight spanning tree is then a spanning tree with weight less than or equal to the weight of every other spanning tree. More generally, any undirected graph (not necessarily connected) has a minimal spanning forest, which is a union of minimum spanning trees for its connected components.
+    	<a href="#Content">Content</a>
+    	<a name="A_Minimal_Spanning_Tree" id="A_Minimal_Spanning_Tree"></a>
+    	<br><br>
+  	</div>
+
+	<a name="Prims_Algorithm" id="Prims_Algorithm"></a>
+	<h3 style="margin-left: 40px;">Prim's algorithm</h3>
+	<div style="margin-left: 40px;">
+     In computer science, Prim's algorithm is a greedy algorithm that finds a minimum spanning tree for a weighted undirected graph. This means it finds a subset of the edges that forms a tree that includes every vertex, where the total weight of all the edges in the tree is minimized. The algorithm operates by building this tree one vertex at a time, from an arbitrary starting vertex, at each step adding the cheapest possible connection from the tree to another vertex.
+ The algorithm was developed in 1930 by Czech mathematician Vojtech Jarnik and later rediscovered and republished by computer scientists Robert C. Prim in 1957and Edsger W. Dijkstra in 1959.It is also sometimes called the DJP algorithm, Jarnik's algorithm,the Prim–Jarnik algorithm,or the Prim–Dijkstra algorithm.
+ Other well-known algorithms for this problem include Kruskal's algorithm and Boruvka's algorithm.These algorithms find the minimum spanning forest in a possibly disconnected graph; in contrast, the most basic form of Prim's algorithm only finds minimum spanning trees in connected graphs. However, running Prim's algorithm separately for each connected component of the graph, it can also be used to find the minimum spanning forest.In terms of their asymptotic time complexity, these three algorithms are equally fast for sparse graphs, but slower than other more sophisticated algorithms.However, for graphs that are sufficiently dense, Prim's algorithm can be made to run in linear time, meeting or improving the time bounds for other algorithms.
+  	</div>
+
+	<h3 style="margin-left: 40px;">Description</h3>
+	<div style = "margin-left: 40px;">
+ The algorithm may informally be described as performing the following steps:<br>
+1.Initialize a tree with a single vertex, chosen arbitrarily from the graph.<br>
+2.Grow the tree by one edge: of the edges that connect the tree to vertices not<br>
+yet in the tree, find the minimum-weight edge, and transfer it to the tree.<br>
+3.Repeat step 2 (until all vertices are in the tree).
+	</div>
+
+	<h3 style="margin-left: 40px;">Time Complexity</h3>
+	<div style = "margin-left: 40px;">
+The time complexity of Prim's algorithm depends on the data structures used for the graph and for ordering the edges by weight, which can be done using a priority queue. The following table shows the typical choices:<br>
+Minimum edge weight data structure<x3 style = "margin-left: 40px;">Time complexity (total)</x3><br>
+Adjacency matrix, searching<x3 style = "margin-left: 97px;">O(|V|^2)</x3><br>
+Binary heap and adjacency list<x3 style = "margin-left: 80px;">	O((|V|+|E|)log |V|)=O(|E|log |V|)</x3><br>
+Fibonacci heap and adjacency list<x3 style = "margin-left: 64px;">O(|E|+|V|log |V|)</x3><br>
+	</div>
+
+
+	<h3 style="margin-left: 40px;">C++ implementation(O(|E|log |V|))</h3>
+	<div style = "margin-left: 40px;">
+#include &lt;iostream><br>
+#include &lt;vector><br>
+#include &lt;deque><br>
+#include &lt;queue><br>
+using namespace std;<br>
+<br>
+struct edge<br>
+{<br>
+	<x3 style = "margin-left: 40px;">int from;</x3><br>
+	<x3 style = "margin-left: 40px;">int to;</x3><br>
+	<x3 style = "margin-left: 40px;">int weight;</x3><br>
+	<x3 style = "margin-left: 40px;">edge(int a=-1,int b=-1,int w=-1)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">from = a;</x3><br>
+		<x3 style = "margin-left: 80px;">to = b;</x3><br>
+		<x3 style = "margin-left: 80px;">weight = w;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">bool operator<(edge &e)const</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">return weight &lt; e.weight;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">void print()</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">cout <&lt; from << " - " <&lt; to << " weight is " <&lt; weight <&lt; endl;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+};<br>
+<br>
+struct compare<br>
+{<br>
+	<x3 style = "margin-left: 40px;">bool operator()(edge a, edge b)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">return b &lt; a;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+};<br>
+<br>
+void MST_Prime(vector&lt;vector&lt;pair&lt;int, int>>> &G, vector&lt;bool> &marked, priority_queue &lt; edge, deque&lt;edge>,compare> PQ, vector&lt;edge> &MST, int v)<br>
+{<br>
+	<x3 style = "margin-left: 40px;">int counter = 0;</x3><br>
+	<x3 style = "margin-left: 40px;">edge e;</x3><br>
+	<x3 style = "margin-left: 40px;">for (;;)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">marked[v] = true;</x3><br>
+		<x3 style = "margin-left: 80px;">++counter;</x3><br>
+		<x3 style = "margin-left: 80px;">if (counter == (int)G.size())</x3><br>
+			<x3 style = "margin-left: 120px;">break;</x3><br>
+		<x3 style = "margin-left: 80px;">for (size_t i = 0; i &lt; G[v].size(); ++i)</x3><br>
+			<x3 style = "margin-left: 120px;">if (!marked[G[v][i].first])</x3><br>
+				<x3 style = "margin-left: 160px;">PQ.push(edge(v, G[v][i].first, G[v][i].second));</x3><br>
+		<x3 style = "margin-left: 80px;">while(!PQ.empty())</x3><br>
+		<x3 style = "margin-left: 80px;">{</x3><br>
+			<x3 style = "margin-left: 120px;">e = PQ.top();</x3><br>
+			<x3 style = "margin-left: 120px;">PQ.pop();</x3><br>
+			<x3 style = "margin-left: 120px;">if (!marked[e.to])</x3><br>
+			<x3 style = "margin-left: 120px;">{</x3><br>
+				<x3 style = "margin-left: 160px;">MST.push_back(e);</x3><br>
+				<x3 style = "margin-left: 160px;">v = e.to;</x3><br>
+				<x3 style = "margin-left: 160px;">break;</x3><br>
+			<x3 style = "margin-left: 120px;">}</x3><br>
+		<x3 style = "margin-left: 80px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+}<br>
+<br>
+int main()<br>
+{<br>
+	<x3 style = "margin-left: 40px;">int n, m, i,a,b,v=0,w;</x3><br>
+	<x3 style = "margin-left: 40px;">edge e;</x3><br>
+	<x3 style = "margin-left: 40px;">cin >> n >> m;</x3><br>
+	<x3 style = "margin-left: 40px;">vector&lt;vector&lt;pair&lt;int,int>>> G(n);</x3><br>
+	<x3 style = "margin-left: 40px;">vector&lt;edge> MST;</x3><br>
+	<x3 style = "margin-left: 40px;">vector&lt;bool> marked(n, false);</x3><br>
+	<x3 style = "margin-left: 40px;">priority_queue&lt;edge,deque&lt;edge>,compare> PQ;</x3><br>
+	<x3 style = "margin-left: 40px;">for (i = 0; i &lt; m; ++i)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">cin >> a >> b >> w;</x3><br>
+		<x3 style = "margin-left: 80px;">G[a].push_back(make_pair(b,w));</x3><br>
+		<x3 style = "margin-left: 80px;">G[b].push_back(make_pair(a,w));</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">MST_Prime(G, marked, PQ,MST, v);</x3><br>
+	<x3 style = "margin-left: 40px;">cout << "The minimal spanning tree :\n";</x3><br>
+	<x3 style = "margin-left: 40px;">for (edge e : MST)</x3><br>
+		<x3 style = "margin-left: 80px;">e.print();</x3><br>
+	<x3 style = "margin-left: 40px;">return 0;</x3><br>
+}<br>
+<br>
+	<a href="#Content">Content</a>
+	<br><br>
+	</div>
+
+
+
+
+
+	<a name="Kruskals_Algorithm" id="Kruskals_Algorithm"></a>
+	<h3 style="margin-left: 40px;">Kruskal's algorithm</h3>
+	<div style="margin-left: 40px;">
+     Kruskal's algorithm is a minimum-spanning-tree algorithm which finds an edge of the least possible weight that connects any two trees in the forest.It is a greedy algorithm in graph theory as it finds a minimum spanning tree for a connected weighted graph adding increasing cost arcs at each step.This means it finds a subset of the edges that forms a tree that includes every vertex, where the total weight of all the edges in the tree is minimized. If the graph is not connected, then it finds a minimum spanning forest (a minimum spanning tree for each connected component).
+ This algorithm first appeared in Proceedings of the American Mathematical Society, pp. 48–50 in 1956, and was written by Joseph Kruskal.
+Other algorithms for this problem include Prim's algorithm, Reverse-delete algorithm, and Boruvka's algorithm.
+  	</div>
+
+	<h3 style="margin-left: 40px;">Description</h3>
+	<div style = "margin-left: 40px;">
+.create a forest F (a set of trees), where each vertex in the graph is a separate tree<br>
+.create a set S containing all the edges in the graph<br>
+.while S is nonempty and F is not yet spanning<br>
+.remove an edge with minimum weight from S<br>
+.if the removed edge connects two different trees then add it to the forest F,combining two trees into a single tree<br>
+ At the termination of the algorithm, the forest forms a minimum spanning forest of the graph. If the graph is connected, the forest has a single component and forms a minimum spanning tree.<br>
+	</div>
+
+
+	<h3 style="margin-left: 40px;">Time Complexity</h3>
+	<div style = "margin-left: 40px;">
+ Prior to sort algorithm edges by weight, it takes O (E × log (E)) time. Then the connected components conveniently stored in a system of disjoint sets. All operations in this case will take O (E × α (E, V)), where α - the inverse of Ackermann's function. As for all practical purposes α (E, V) &lt;5, then we can take it as a constant, so that the total time of Kruskal algorithm can be taken as O (E × log (E)).
+	</div>
+
+	<h3 style="margin-left: 40px;">C++ naive implementation(O(|E|log |E|)+|V||E|))</h3>
+	<div style = "margin-left: 40px;">
+#include &lt;iostream><br>
+#include &lt;vector><br>
+#include &lt;deque><br>
+#include &lt;queue><br>
+using namespace  std;<br>
+<br>
+struct edge<br>
+{<br>
+	<x3 style = "margin-left: 40px;">int a;</x3><br>
+	<x3 style = "margin-left: 40px;">int b;</x3><br>
+	<x3 style = "margin-left: 40px;">int weight;</x3><br>
+	<x3 style = "margin-left: 40px;">edge(int x=-1, int y=-1, int w=-1)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">a = x;</x3><br>
+		<x3 style = "margin-left: 80px;">b = y;</x3><br>
+		<x3 style = "margin-left: 80px;">weight = w;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">bool operator<(edge &e)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">return weight &lt; e.weight;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">void print()</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">cout <&lt; a << " - " <&lt; b << " weight is " <&lt; weight <&lt; endl;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+};<br>
+<br>
+struct compare<br>
+{<br>
+	<x3 style = "margin-left: 40px;">bool operator ()(edge a, edge b)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">return b &lt; a;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+};<br>
+<br>
+void Kruskal(priority_queue&lt;edge, deque&lt;edge>, compare> &edges, vector&lt;int> &forest, vector&lt;edge> &MST, int n)<br>
+{<br>
+	<x3 style = "margin-left: 40px;">edge e;</x3><br>
+	<x3 style = "margin-left: 40px;">int min,max,i;</x3><br>
+	<x3 style = "margin-left: 40px;">while (!edges.empty() && MST.size()<n-1)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">e = edges.top();</x3><br>
+		<x3 style = "margin-left: 80px;">edges.pop();</x3><br>
+		<x3 style = "margin-left: 80px;">if (forest[e.a] != forest[e.b])</x3><br>
+		<x3 style = "margin-left: 80px;">{</x3><br>
+			<x3 style = "margin-left: 120px;">MST.push_back(e);</x3><br>
+			<x3 style = "margin-left: 120px;">min = std::min(forest[e.a], forest[e.b]);</x3><br>
+			<x3 style = "margin-left: 120px;">max = std::max(forest[e.a], forest[e.b]);</x3><br>
+			<x3 style = "margin-left: 120px;">for (i = 0; i &lt; n; ++i)</x3><br>
+			<x3 style = "margin-left: 120px;">{</x3><br>
+				<x3 style = "margin-left: 160px;">if (forest[i] == max)</x3><br>
+					<x3 style = "margin-left: 200px;">forest[i] = min</x3>;<br>
+			<x3 style = "margin-left: 120px;">}</x3><br>
+		<x3 style = "margin-left: 80px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+}<br>
+<br>
+int main()<br>
+{<br>
+	<x3 style = "margin-left: 40px;">int n, m, i,a,b,w;</x3><br>
+	<x3 style = "margin-left: 40px;">priority_queue&lt;edge,deque&lt;edge>,compare> edges;</x3><br>
+	<x3 style = "margin-left: 40px;">vector&lt;edge> MST;</x3><br>
+	<x3 style = "margin-left: 40px;">cin >> n >> m;</x3><br>
+	<x3 style = "margin-left: 40px;">vector&lt;int> forest(n);</x3><br>
+	<x3 style = "margin-left: 40px;">for (i = 0; i &lt; n; ++i)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">forest[i] = i;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">for (i = 0; i &lt; m; ++i)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">cin >> a >> b >> w;</x3><br>
+		<x3 style = "margin-left: 80px;">edges.push(edge(a, b, w));</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">Kruskal(edges, forest,MST,n);</x3><br>
+	<x3 style = "margin-left: 40px;">for (edge e : MST)</x3><br>
+		<x3 style = "margin-left: 80px;">e.print();</x3><br>
+	<x3 style = "margin-left: 40px;">return 0;</x3><br>
+}<br>
+<br>
+
+</div>
+
+	<h3 style="margin-left: 40px;">C++  implementation with disjoint-set-union(DSU) (O(|E|log |E|))</h3>
+	<div style = "margin-left: 40px;">
+
+#include &lt;iostream><br>
+#include &lt;vector><br>
+#include &lt;deque><br>
+#include &lt;queue><br>
+using namespace  std;<br>
+<br>
+struct edge<br>
+{<br>
+	<x3 style = "margin-left: 40px;">int a;</x3><br>
+	<x3 style = "margin-left: 40px;">int b;</x3><br>
+	<x3 style = "margin-left: 40px;">int weight;</x3><br>
+	<x3 style = "margin-left: 40px;">edge(int x=-1, int y=-1, int w=-1)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">a = x;</x3><br>
+		<x3 style = "margin-left: 80px;">b = y;</x3><br>
+		<x3 style = "margin-left: 80px;">weight = w;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">bool operator<(edge &e)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">return weight &lt; e.weight;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">void print()</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">cout <&lt; a << " - " <&lt; b << " weight is " <&lt; weight <&lt; endl;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+};<br>
+<br>
+struct compare<br>
+{<br>
+	<x3 style = "margin-left: 40px;">bool operator ()(edge a, edge b)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">return b &lt; a;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+};<br>
+<br>
+vector&lt;int> Parent;<br>
+vector&lt;size_t> Rank;<br>
+size_t sets_num = 0;<br>
+<br>
+void make_set(int v)<br>
+{<br>
+	<x3 style = "margin-left: 40px;">Parent[v] = v;</x3><br>
+}<br>
+<br>
+int find_set(int v)<br>
+{<br>
+	<x3 style = "margin-left: 40px;">if (v == Parent[v])</x3><br>
+		<x3 style = "margin-left: 80px;">return v;</x3><br>
+	<x3 style = "margin-left: 40px;">return Parent[v] = find_set(Parent[v]);</x3><br>
+}<br>
+<br>
+bool union_sets(int a, int b)<br>
+{<br>
+	<x3 style = "margin-left: 40px;">a = find_set(a);</x3><br>
+	<x3 style = "margin-left: 40px;">b = find_set(b);</x3><br>
+	<x3 style = "margin-left: 40px;">if (a != b)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">if (Rank[a] < Rank[b])</x3><br>
+			<x3 style = "margin-left: 120px;">swap(a, b);</x3><br>
+		<x3 style = "margin-left: 80px;">Parent[b] = a;</x3><br>
+		<x3 style = "margin-left: 80px;">if (Rank[a] == Rank[b])</x3><br>
+			<x3 style = "margin-left: 120px;">++Rank[a];</x3><br>
+		<x3 style = "margin-left: 80px;">--sets_num;</x3><br>
+		<x3 style = "margin-left: 80px;">return true;</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">return false;</x3><br>
+}<br>
+<br>
+void Kruskal(priority_queue&lt;edge, deque&lt;edge>, compare> &E, vector&lt;edge> &answer, int &sum)<br>
+{<br>
+	<x3 style = "margin-left: 40px;">edge e;</x3><br>
+	<x3 style = "margin-left: 40px;">while (!E.empty() && sets_num != 1)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">e = E.top();</x3><br>
+		<x3 style = "margin-left: 80px;">E.pop();</x3><br>
+		<x3 style = "margin-left: 80px;">if(union_sets(e.from, e.to));</x3><br>
+		<x3 style = "margin-left: 80px;">{</x3><br>
+			<x3 style = "margin-left: 120px;">sum += e.weight;</x3><br>
+			<x3 style = "margin-left: 120px;">answer.push_back(e);</x3><br>
+		<x3 style = "margin-left: 80px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+}<br>
+<br>
+int main()<br>
+{<br>
+	<x3 style = "margin-left: 40px;">int n, m, i, a, b, w, sum = 0;</x3><br>
+	<x3 style = "margin-left: 40px;">priority_queue&lt;edge, deque&lt;edge>, compare> edges;</x3><br>
+	<x3 style = "margin-left: 40px;">vector&lt;edge> answer;</x3><br>
+	<x3 style = "margin-left: 40px;">cin >> n >> m;</x3><br>
+	<x3 style = "margin-left: 40px;">Parent = vector&lt;int>(n + 1);</x3><br>
+	<x3 style = "margin-left: 40px;">Rank = vector&lt;size_t>(n + 1);</x3><br>
+	<x3 style = "margin-left: 40px;">sets_num = n;</x3><br>
+	<x3 style = "margin-left: 40px;">for (i = 1; i <= n; ++i)</x3><br>
+		<x3 style = "margin-left: 80px;">make_set(i);</x3><br>
+	<x3 style = "margin-left: 40px;">for (i = 0; i < m; ++i)</x3><br>
+	<x3 style = "margin-left: 40px;">{</x3><br>
+		<x3 style = "margin-left: 80px;">cin >> a >> b >> w;</x3><br>
+		<x3 style = "margin-left: 80px;">edges.push(edge(a, b, w));</x3><br>
+	<x3 style = "margin-left: 40px;">}</x3><br>
+	<x3 style = "margin-left: 40px;">Kruskal(edges,answer, sum);</x3><br>
+	<x3 style = "margin-left: 40px;">cout <&lt; "The minimal spannig tree weight is " <&lt; sum <&lt; endl;</x3><br>
+	<x3 style = "margin-left: 40px;">for (edge e : answer)</x3><br>
+		<x3 style = "margin-left: 80px;">e.print();</x3><br>
+	<x3 style = "margin-left: 40px;">return 0;</x3><br>
+}<br>
+<br>
+    	<a href="#Content">Content</a>
+	</div>
+
+
+	</body>
+
+</html>
